@@ -7,10 +7,10 @@
 
 const database = require("../config/database");
 
-// ==> Método responsável por criar um novo "Employee"
+// ==> método responsável por criar um novo "Employee"
 exports.createEmployee = async (request, response) => {
   const { name, job_role, salary, date_of_birth, employee_registration } = request.body;
-  const { rows } = await database.query(
+  await database.query(
     "INSERT INTO employee (name, job_role, salary, date_of_birth, employee_registration) VALUES ($1, $2, $3, $4, $5)",
     [name, job_role, salary, date_of_birth, employee_registration]
   );
@@ -28,3 +28,9 @@ exports.createEmployee = async (request, response) => {
     },
   });
 };
+
+// ==> método responsável por listar todos os employees
+exports.listAllEmployees = async (request, response) => {
+  const employees = await database.query("SELECT * FROM employees ORDER BY name ASC");
+  response.status(200).send(employees.rows);
+}
